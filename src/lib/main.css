@@ -23,3 +23,12 @@
 .pulse-right {
   animation: pulse-right 0.75s linear 0s infinite alternate;
 }
+
+/* prose */
+.prose li {
+  margin-top: 0rem !important;
+  margin-bottom: 0rem !important;
+}
+.prose li:not(:last-child) {
+  margin-bottom: 0.25rem !important;
+}

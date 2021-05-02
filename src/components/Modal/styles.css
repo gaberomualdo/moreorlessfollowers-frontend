@@ -1,0 +1,94 @@
+@keyframes modal-appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes modal-disappear {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes modal-inner-appear {
+  0% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes modal-inner-disappear {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+.modal-component {
+  animation-name: modal-appear;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100vh !important;
+  z-index: 999999999;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-component.closing {
+  animation-name: modal-disappear;
+}
+.modal-component,
+.modal-component .inner {
+  animation-fill-mode: both;
+  animation-timing-function: linear;
+  animation-duration: 0.25s;
+  backface-visibility: hidden;
+}
+.modal-component .inner {
+  animation-name: modal-inner-appear;
+  border-radius: 4px;
+  padding: 2.5rem;
+  padding-top: 0;
+  position: relative;
+  max-width: 100%;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+.modal-component.closing .inner {
+  animation-name: modal-inner-disappear;
+}
+.modal-component .inner > .close {
+  position: sticky;
+  clear: both;
+  float: right;
+  top: 0.75rem;
+  right: 0;
+  transform: translateX(1.75rem);
+}
+@media only screen and (max-width: 600px) {
+  .modal-component .inner {
+    height: 100vh;
+    max-height: none;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .modal-component .inner > .close {
+    transform: translateX(0.75rem);
+  }
+}
+.modal-component .inner > .close + * {
+  clear: both;
+}
