@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  svg {
+    @apply inline-block;
+    @apply align-middle;
+  }
+}
+
+/* transitions */
+@keyframes pulse-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(0.2rem);
+  }
+}
+.pulse-right {
+  animation: pulse-right 0.75s linear 0s infinite alternate;
+}
