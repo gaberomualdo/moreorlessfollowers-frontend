@@ -46,3 +46,9 @@
 .prose li:not(:last-child) {
   margin-bottom: 0.25rem !important;
 }
+
+/* other */
+
+img {
+  font-size: 0;
+}

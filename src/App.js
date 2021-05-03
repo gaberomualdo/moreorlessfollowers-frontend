@@ -5,9 +5,21 @@ import fetchFromServer from './lib/fetchFromServer';
 import logoHTML from './lib/logoHTML';
 import './lib/main.css';
 import serverBase from './lib/serverBase';
-import commaNumber from 'comma-number';
+import md5 from 'md5';
+import seedrandom from 'seedrandom';
 
 const HIGHSCORE_PARAM = 'highscore';
+
+const statusColors = {
+  play: 'white',
+  gameover: 'red-500',
+  correct: 'green-500',
+};
+const statusTextColors = {
+  play: 'gray-800',
+  gameover: 'white',
+  correct: 'white',
+};
 
 function App() {
   const [playLoading, setPlayLoading] = useState(false);
@@ -17,25 +29,17 @@ function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
 
-  const updateHighScore = () => setHighScore(parseInt(localStorage.getItem(HIGHSCORE_PARAM)) || 0);
-  useEffect(() => updateHighScore(), []);
-
   const [accounts, setAccounts] = useState([]);
   const [gameStatus, setGameStatus] = useState('play');
   const [transitioning, setTransitioning] = useState(false);
 
+  const [overlayEnabled, setOverlayEnabled] = useState(false);
+  const [overlayOpaque, setOverlayOpaque] = useState(false);
+
   const scrollingGameElm = useRef(null);
 
-  const statusColors = {
-    play: 'white',
-    gameover: 'red-500',
-    correct: 'green-500',
-  };
-  const statusTextColors = {
-    play: 'gray-800',
-    gameover: 'white',
-    correct: 'white',
-  };
+  const updateHighScore = () => setHighScore(parseInt(localStorage.getItem(HIGHSCORE_PARAM)) || 0);
+  useEffect(() => updateHighScore(), []);
 
   const loadAccount = async () => {
     const newAccount = await fetchFromServer('/get-random-account.php?excluded-ids=' + accounts[accounts.length - 1].id);
@@ -62,13 +66,19 @@ function App() {
     }, 500);
     setTimeout(async () => {
       if (status === 'gameover') {
+        setOverlayEnabled(true);
+        setTimeout(() => {
+          setOverlayOpaque(true);
+        }, 300);
         setTimeout(() => {
           setGameStatus('play');
           setAccounts([]);
           setScore(0);
           setPlaying(false);
           setPlayedBefore(true);
-        }, 500);
+          setOverlayEnabled(false);
+          setOverlayOpaque(false);
+        }, 550);
       } else {
         await loadAccount();
         const newScore = score + 1;
@@ -98,12 +108,13 @@ function App() {
 
       {playing ? (
         <main className='smooth-scroll w-full h-screen overflow-hidden whitespace-nowrap' ref={scrollingGameElm}>
-          <div
-            className='fixed bottom-0 right-0 w-32 py-2 px-3 z-50'
+          <a
+            className='fixed bottom-0 right-0 w-32 py-2 px-3 z-50 opacity-70 hover:opacity-100 transition-all'
             dangerouslySetInnerHTML={{
               __html: logoHTML,
             }}
-          ></div>
+            href='./'
+          ></a>
           <div
             className={`transition-all transition duration-300 ${
               transitioning ? 'opacity-0' : ''
@@ -130,20 +141,28 @@ function App() {
               <div className='w-1/2 h-screen relative inline-flex flex-col justify-center items-center' key={i}>
                 <div className='absolute inset h-full w-full z-0'>
                   {e.postImageURLs.map((im, imkey) => (
-                    <div key={imkey} className='w-1/3 h-1/3 float-left relative'>
+                    <div
+                      key={imkey}
+                      className='w-1/3 h-1/3 float-left relative bg-cover bg-center'
+                      style={{
+                        backgroundImage: `url(${serverBase}/images/${md5(
+                          e.postImageURLs[Math.floor(seedrandom(e.username)() * e.postImageURLs.length)]
+                        )}.jpg)`,
+                      }}
+                    >
                       <img
                         className='w-full h-full absolute inset object-cover object-center'
-                        src={`${serverBase}/get-img.php?url=${encodeURIComponent(im)}`}
+                        src={`${serverBase}/images/${md5(im)}.jpg`}
                         alt={`A recent post from ${e.username} on Instagram`}
                       />
                     </div>
                   ))}
                 </div>
                 <div className='absolute inset h-full w-full z-10 bg-black opacity-80'></div>
-                <div className='z-20 w-96 p-4 rounded-md flex text-gray-900 shadow-md' style={{ backgroundColor: 'rgba(255, 255, 255, 1)' }}>
+                <div className='z-20 w-96 p-4 rounded-md flex text-gray-900 shadow-lg bg-white'>
                   <img
                     className='h-16 w-16 rounded-full flex-initial'
-                    src={`${serverBase}/get-img.php?url=${encodeURIComponent(e.pictureURL)}`}
+                    src={`${serverBase}/images/${md5(e.pictureURL)}.jpg`}
                     alt={`${e.username} on Instagram`}
                     loading='lazy'
                   />
@@ -198,6 +217,13 @@ function App() {
               </div>
             );
           })}
+
+          {overlayEnabled ? (
+            <div
+              className={`fixed inset-0 w-full h-screen bg-gray-800 transition-all ${overlayOpaque ? 'opacity-100' : 'opacity-0'}`}
+              style={{ zIndex: 9999 }}
+            ></div>
+          ) : null}
         </main>
       ) : (
         <>
