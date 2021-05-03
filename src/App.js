@@ -21,6 +21,8 @@ const statusTextColors = {
   correct: 'white',
 };
 
+const getProxyURL = (url) => `${serverBase}/images/${md5(url)}.jpg`;
+
 function App() {
   const [playLoading, setPlayLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -163,17 +165,13 @@ function App() {
                     <div key={imkey} className='w-1/3 h-1/3 float-left relative bg-cover bg-center'>
                       <img
                         className='w-full h-full absolute inset object-cover object-center'
-                        src={`${serverBase}/images/${md5(im)}.jpg`}
+                        src={getProxyURL(im)}
                         alt={`A recent post from ${e.username} on Instagram`}
                         onError={(evt) => {
                           const placeholderSrc = '/post-placeholder.jpg';
-                          const newSrc = `${serverBase}/images/${md5(
-                            e.postImageURLs[Math.floor(seedrandom(e.username)() * e.postImageURLs.length)]
-                          )}.jpg`;
+                          const newSrc = getProxyURL(e.postImageURLs[Math.floor(seedrandom(e.username)() * e.postImageURLs.length)]);
                           if (evt.target.src !== newSrc) {
                             evt.target.src = newSrc;
-                          } else if (evt.target.src !== e.pictureURL) {
-                            evt.target.src = e.pictureURL;
                           } else if (evt.target.src !== placeholderSrc) {
                             evt.target.src = placeholderSrc;
                           } else {
@@ -188,7 +186,7 @@ function App() {
                 <div className='-md-zoom-small z-20 w-10/12 md:w-8/12 lg:w-96 p-1 md:p-4 rounded-md flex text-gray-900 shadow-lg bg-white'>
                   <img
                     className='h-16 w-16 rounded-md md:rounded-full flex-initial bg-cover bg-center'
-                    src={`${serverBase}/images/${md5(e.pictureURL)}.jpg`}
+                    src={getProxyURL(e.pictureURL)}
                     onError={(e) => {
                       const placeholderSrc = '/picture-placeholder.jpg';
                       if (e.target.src !== placeholderSrc) {
