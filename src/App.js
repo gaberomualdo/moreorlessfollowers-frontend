@@ -11,14 +11,14 @@ import seedrandom from 'seedrandom';
 const HIGHSCORE_PARAM = 'highscore';
 
 const statusColors = {
-  play: 'white',
-  gameover: 'red-500',
-  correct: 'green-500',
+  play: 'bg-white',
+  gameover: 'bg-red-500',
+  correct: 'bg-green-500',
 };
 const statusTextColors = {
-  play: 'gray-800',
-  gameover: 'white',
-  correct: 'white',
+  play: 'text-gray-800',
+  gameover: 'text-white',
+  correct: 'text-white',
 };
 
 const getProxyURL = (url) => `${serverBase}/images/${md5(url)}.jpg`;
@@ -137,10 +137,10 @@ function App() {
             } absolute left-0 md:left-1/2 top-1/2 md:top-0 h-16 md:h-full z-20 transform -translate-y-1/2 md:-translate-x-1/2 md:translate-y-0 flex flex-row md:flex-col justify-center w-full md:w-16`}
           >
             <div
-              className={`z-auto absolute left-0 md:left-1/2 top-1/2 md:top-0 h-1 md:h-full z-20 transform -translate-y-1/2 md:translate-y-0 md:-translate-x-1/2 w-full md:w-1 bg-${statusColors[gameStatus]}`}
+              className={`z-auto absolute left-0 md:left-1/2 top-1/2 md:top-0 h-1 md:h-full z-20 transform -translate-y-1/2 md:translate-y-0 md:-translate-x-1/2 w-full md:w-1 ${statusColors[gameStatus]}`}
             ></div>
             <div
-              className={`transform scale-90 md:scale-100 z-10 w-16 h-16 rounded-md bg-${statusColors[gameStatus]} shadow text-${statusTextColors[gameStatus]} text-2xl text-center uppercase font-bold`}
+              className={`transform scale-90 md:scale-100 z-10 w-16 h-16 rounded-md ${statusColors[gameStatus]} shadow ${statusTextColors[gameStatus]} text-2xl text-center uppercase font-bold`}
               style={{ lineHeight: `${16 * 0.25}rem` }}
             >
               {(() => {
