@@ -20,8 +20,14 @@
     transform: translateX(0.2rem);
   }
 }
-.pulse-right {
-  animation: pulse-right 0.75s linear 0s infinite alternate;
+
+@layer utilities {
+  .loader {
+    border-top-color: rgb(31, 41, 55);
+  }
+  .pulse-right {
+    animation: pulse-right 0.75s linear 0s infinite alternate;
+  }
 }
 
 /* prose */

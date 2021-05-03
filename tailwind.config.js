@@ -41,6 +41,9 @@ module.exports = {
     },
   },
   variants: {
+    opacity: ({ after }) => after(['disabled']),
+    pointerEvents: ({ after }) => after(['disabled']),
+    backgroundColor: ({ after }) => after(['disabled']),
     extend: {},
   },
   plugins: [require('@tailwindcss/typography')],

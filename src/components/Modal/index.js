@@ -25,7 +25,7 @@ export default function Modal(props) {
           }
         }}
       >
-        <div className='inner bg-gray-800 w-full md:w-3/5 shadow-xl'>
+        <div className='inner bg-gray-800 w-full md:w-3/5 shadow-xl rounded-lg'>
           <button
             className='rounded-full close focus:outline-none mt-3 mb-3 opacity-70 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-1 focus:ring-offset-gray-800'
             aria-label='Close Modal'
