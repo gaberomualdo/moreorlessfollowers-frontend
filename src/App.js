@@ -196,9 +196,9 @@ function App() {
                     alt={`${e.username} on Instagram`}
                     loading='lazy'
                   />
-                  <div className='flex-auto flex flex-col justify-center ml-3'>
-                    <h1 className='text-xl font-semibold'>{e.name}</h1>
-                    <p className='text-gray-500'>
+                  <div className='flex-initial flex flex-col justify-center ml-3' style={{ width: `calc(100% - ${19 * 0.25}rem)` }}>
+                    <h1 className='text-xl font-semibold w-full truncate'>{e.name}</h1>
+                    <p className='text-gray-500 w-full truncate'>
                       {e.showAnswer /* allow for link to be clicked if answer is shown */ ? (
                         <a href={`https://instagram.com/${e.username}`} target='_blank' rel='noopener noreferrer' className='hover:underline'>
                           @{e.username}
