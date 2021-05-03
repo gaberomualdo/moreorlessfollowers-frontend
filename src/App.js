@@ -88,7 +88,12 @@ function App() {
         }
         setScore(newScore);
         setTransitioning(true);
-        scrollingGameElm.current.scrollTo({ left: scrollingGameElm.current.scrollWidth, top: 0, behavior: 'smooth' });
+        if (window.innerWidth < 768) {
+          // less than responsive medium (md) on tailwind, scroll column
+          scrollingGameElm.current.scrollTo({ top: scrollingGameElm.current.scrollHeight, left: 0, behavior: 'smooth' });
+        } else {
+          scrollingGameElm.current.scrollTo({ left: scrollingGameElm.current.scrollWidth, top: 0, behavior: 'smooth' });
+        }
         setTimeout(() => {
           setGameStatus('play');
           setTransitioning(false);
@@ -118,7 +123,7 @@ function App() {
       {playing ? (
         <main className='w-full h-screen overflow-hidden md:whitespace-nowrap' ref={scrollingGameElm}>
           <a
-            className='fixed bottom-0 right-0 w-32 py-2 px-3 z-50 opacity-70 hover:opacity-100 transition-all'
+            className='hidden md:block fixed bottom-0 right-0 w-32 py-2 px-3 z-50 opacity-70 hover:opacity-100 transition-all'
             dangerouslySetInnerHTML={{
               __html: logoHTML,
             }}
@@ -133,7 +138,7 @@ function App() {
               className={`z-auto absolute left-0 md:left-1/2 top-1/2 md:top-0 h-1 md:h-full z-20 transform -translate-y-1/2 md:translate-y-0 md:-translate-x-1/2 w-full md:w-1 bg-${statusColors[gameStatus]}`}
             ></div>
             <div
-              className={`z-10 w-16 h-16 rounded-md bg-${statusColors[gameStatus]} shadow text-${statusTextColors[gameStatus]} text-2xl text-center uppercase font-bold`}
+              className={`transform scale-90 md:scale-100 z-10 w-16 h-16 rounded-md bg-${statusColors[gameStatus]} shadow text-${statusTextColors[gameStatus]} text-2xl text-center uppercase font-bold`}
               style={{ lineHeight: `${16 * 0.25}rem` }}
             >
               {(() => {
@@ -149,31 +154,47 @@ function App() {
           </div>
           {accounts.map((e, i) => {
             return (
-              <div className='w-full h-screen-1/2 md:w-1/2 md:h-screen relative inline-flex flex-col justify-center items-center' key={i}>
-                <div className='absolute inset h-full w-full z-0'>
+              <div
+                className='w-full h-screen-1/2 pt-8 md:pt-0 md:w-1/2 md:h-screen relative align-top inline-flex flex-col justify-center items-center'
+                key={i}
+              >
+                <div className='absolute inset-0 h-full w-full z-0'>
                   {e.postImageURLs.map((im, imkey) => (
-                    <div
-                      key={imkey}
-                      className='w-1/3 h-1/3 float-left relative bg-cover bg-center'
-                      style={{
-                        backgroundImage: `url(${serverBase}/images/${md5(
-                          e.postImageURLs[Math.floor(seedrandom(e.username)() * e.postImageURLs.length)]
-                        )}.jpg)`,
-                      }}
-                    >
+                    <div key={imkey} className='w-1/3 h-1/3 float-left relative bg-cover bg-center'>
                       <img
                         className='w-full h-full absolute inset object-cover object-center'
                         src={`${serverBase}/images/${md5(im)}.jpg`}
                         alt={`A recent post from ${e.username} on Instagram`}
+                        onError={(evt) => {
+                          const placeholderSrc = '/post-placeholder.jpg';
+                          const newSrc = `${serverBase}/images/${md5(
+                            e.postImageURLs[Math.floor(seedrandom(e.username)() * e.postImageURLs.length)]
+                          )}.jpg`;
+                          if (evt.target.src !== newSrc) {
+                            evt.target.src = newSrc;
+                          } else if (evt.target.src !== e.pictureURL) {
+                            evt.target.src = e.pictureURL;
+                          } else if (evt.target.src !== placeholderSrc) {
+                            evt.target.src = placeholderSrc;
+                          } else {
+                            // none of the images are working
+                          }
+                        }}
                       />
                     </div>
                   ))}
                 </div>
-                <div className='absolute inset h-full w-full z-10 bg-black opacity-80'></div>
-                <div className='z-20 w-10/12 md:w-8/12 lg:w-96 p-4 rounded-md flex text-gray-900 shadow-lg bg-white'>
+                <div className='absolute inset-0 h-full w-full z-10 bg-black opacity-80'></div>
+                <div className='-md-zoom-small z-20 w-10/12 md:w-8/12 lg:w-96 p-1 md:p-4 rounded-md flex text-gray-900 shadow-lg bg-white'>
                   <img
-                    className='h-16 w-16 rounded-full flex-initial'
+                    className='h-16 w-16 rounded-md md:rounded-full flex-initial bg-cover bg-center'
                     src={`${serverBase}/images/${md5(e.pictureURL)}.jpg`}
+                    onError={(e) => {
+                      const placeholderSrc = '/picture-placeholder.jpg';
+                      if (e.target.src !== placeholderSrc) {
+                        e.target.src = placeholderSrc;
+                      }
+                    }}
                     alt={`${e.username} on Instagram`}
                     loading='lazy'
                   />
@@ -190,11 +211,13 @@ function App() {
                     </p>
                   </div>
                 </div>
-                <h2 className='z-20 uppercase text-center w-full text-white font-bold text-xl tracking-wide mt-4 opacity-60'>has</h2>
+                <h2 className='-md-zoom-small z-20 uppercase text-center w-full text-white font-bold text-lg md:text-xl tracking-wide mt-4 opacity-60'>
+                  has
+                </h2>
                 <div
-                  className={`z-20 w-10/12 md:w-8/12 lg:w-96 ${
-                    e.showAnswer ? 'flex-row h-20' : 'py-4 lg:py-0 lg:h-20 flex-col lg:flex-row'
-                  } flex items-center`}
+                  className={` z-20 w-10/12 md:w-8/12 lg:w-96 ${
+                    e.showAnswer ? 'flex-row h-16' : 'py-4 lg:py-0 flex-col lg:flex-row'
+                  } flex items-center lg:h-20`}
                 >
                   {e.showAnswer ? (
                     <h2 className='text-4xl lg:text-5xl text-center font-bold w-full'>
@@ -225,7 +248,7 @@ function App() {
                     </>
                   )}
                 </div>
-                <h2 className='z-20 uppercase text-center w-full text-white font-bold text-xl tracking-wide mt-2 opacity-60'>
+                <h2 className='-md-zoom-small z-20 uppercase text-center w-full text-white font-bold text-lg md:text-xl tracking-wide mt-1 md:mt-2 opacity-60'>
                   {e.showAnswer ? 'Instagram' : ''} followers
                   {e.showAnswer ? '' : <> than @{accounts[i - 1].username}</>}
                 </h2>
