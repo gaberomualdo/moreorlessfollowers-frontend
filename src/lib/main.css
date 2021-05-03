@@ -33,8 +33,8 @@
   .pulse-right {
     animation: pulse-right 0.75s linear 0s infinite alternate;
   }
-  .smooth-scroll {
-    scroll-behavior: smooth;
+  .h-screen-1\/2 {
+    height: 50vh;
   }
 }
 
@@ -48,7 +48,6 @@
 }
 
 /* other */
-
 img {
   font-size: 0;
 }

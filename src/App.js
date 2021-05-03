@@ -88,7 +88,7 @@ function App() {
         }
         setScore(newScore);
         setTransitioning(true);
-        scrollingGameElm.current.scrollTo(scrollingGameElm.current.scrollWidth, 0);
+        scrollingGameElm.current.scrollTo({ left: scrollingGameElm.current.scrollWidth, top: 0, behavior: 'smooth' });
         setTimeout(() => {
           setGameStatus('play');
           setTransitioning(false);
@@ -97,8 +97,17 @@ function App() {
     }, 900);
   };
 
+  const collageBackgroundStyle = {
+    backgroundImage: `
+    linear-gradient( rgba(31, 41, 55, .95), rgba(31, 41, 55, .95) ),
+    url(${serverBase}/get-collage-img.php)
+    `,
+    backgroundSize: `cover, 25rem auto`,
+    backgroundPosition: `center, center`,
+  };
+
   return (
-    <div className='text-white font-sans w-full flex min-h-screen bg-gray-800 flex-col items-center antialiased'>
+    <div className='text-white font-sans w-full flex min-h-screen flex-col items-center antialiased' style={collageBackgroundStyle}>
       <header className='fixed pt-2 px-2 inset-0 h-10 z-50'>
         {playing ? <p className='float-left rounded bg-gray-400 py-1 px-3 font-medium shadow-md'>Score: {score}</p> : null}
         <p className='float-right rounded bg-gradient-to-br from-green-400 to-blue-500 py-1 px-3 font-medium shadow-md'>
@@ -107,7 +116,7 @@ function App() {
       </header>
 
       {playing ? (
-        <main className='smooth-scroll w-full h-screen overflow-hidden whitespace-nowrap' ref={scrollingGameElm}>
+        <main className='w-full h-screen overflow-hidden md:whitespace-nowrap' ref={scrollingGameElm}>
           <a
             className='fixed bottom-0 right-0 w-32 py-2 px-3 z-50 opacity-70 hover:opacity-100 transition-all'
             dangerouslySetInnerHTML={{
@@ -118,9 +127,11 @@ function App() {
           <div
             className={`transition-all transition duration-300 ${
               transitioning ? 'opacity-0' : ''
-            } absolute left-1/2 top-0 h-full z-20 transform -translate-x-1/2 flex flex-col justify-center w-16`}
+            } absolute left-0 md:left-1/2 top-1/2 md:top-0 h-16 md:h-full z-20 transform -translate-y-1/2 md:-translate-x-1/2 md:translate-y-0 flex flex-row md:flex-col justify-center w-full md:w-16`}
           >
-            <div className={`z-auto absolute left-1/2 top-0 h-full z-20 transform -translate-x-1/2 w-1 bg-${statusColors[gameStatus]}`}></div>
+            <div
+              className={`z-auto absolute left-0 md:left-1/2 top-1/2 md:top-0 h-1 md:h-full z-20 transform -translate-y-1/2 md:translate-y-0 md:-translate-x-1/2 w-full md:w-1 bg-${statusColors[gameStatus]}`}
+            ></div>
             <div
               className={`z-10 w-16 h-16 rounded-md bg-${statusColors[gameStatus]} shadow text-${statusTextColors[gameStatus]} text-2xl text-center uppercase font-bold`}
               style={{ lineHeight: `${16 * 0.25}rem` }}
@@ -138,7 +149,7 @@ function App() {
           </div>
           {accounts.map((e, i) => {
             return (
-              <div className='w-1/2 h-screen relative inline-flex flex-col justify-center items-center' key={i}>
+              <div className='w-full h-screen-1/2 md:w-1/2 md:h-screen relative inline-flex flex-col justify-center items-center' key={i}>
                 <div className='absolute inset h-full w-full z-0'>
                   {e.postImageURLs.map((im, imkey) => (
                     <div
@@ -159,7 +170,7 @@ function App() {
                   ))}
                 </div>
                 <div className='absolute inset h-full w-full z-10 bg-black opacity-80'></div>
-                <div className='z-20 w-96 p-4 rounded-md flex text-gray-900 shadow-lg bg-white'>
+                <div className='z-20 w-10/12 md:w-8/12 lg:w-96 p-4 rounded-md flex text-gray-900 shadow-lg bg-white'>
                   <img
                     className='h-16 w-16 rounded-full flex-initial'
                     src={`${serverBase}/images/${md5(e.pictureURL)}.jpg`}
@@ -180,15 +191,19 @@ function App() {
                   </div>
                 </div>
                 <h2 className='z-20 uppercase text-center w-full text-white font-bold text-xl tracking-wide mt-4 opacity-60'>has</h2>
-                <div className='z-20 w-96 h-20 flex items-center'>
+                <div
+                  className={`z-20 w-10/12 md:w-8/12 lg:w-96 ${
+                    e.showAnswer ? 'flex-row h-20' : 'py-4 lg:py-0 lg:h-20 flex-col lg:flex-row'
+                  } flex items-center`}
+                >
                   {e.showAnswer ? (
-                    <h2 className='text-5xl text-center font-bold w-full'>
+                    <h2 className='text-4xl lg:text-5xl text-center font-bold w-full'>
                       <AnimatedNumber number={Math.floor(e.followers / 10000) * 10000} />
                     </h2>
                   ) : (
                     <>
                       <Button
-                        className='w-auto flex-auto'
+                        className='w-auto flex-auto lg:w-auto w-full pr-8'
                         onClick={() => {
                           const newStatus = e.followers >= accounts[i - 1].followers ? 'correct' : 'gameover';
                           nextGame(newStatus);
@@ -198,7 +213,7 @@ function App() {
                         More
                       </Button>
                       <Button
-                        className='w-auto flex-auto ml-2'
+                        className='w-auto flex-auto mt-2 lg:ml-2 lg:mt-0 lg:w-auto w-full pr-8'
                         onClick={() => {
                           const newStatus = e.followers <= accounts[i - 1].followers ? 'correct' : 'gameover';
                           nextGame(newStatus);
@@ -220,8 +235,8 @@ function App() {
 
           {overlayEnabled ? (
             <div
-              className={`fixed inset-0 w-full h-screen bg-gray-800 transition-all ${overlayOpaque ? 'opacity-100' : 'opacity-0'}`}
-              style={{ zIndex: 9999 }}
+              className={`fixed inset-0 w-full h-screen bg-gray-800 transition-all duration-300 ${overlayOpaque ? 'opacity-100' : 'opacity-0'}`}
+              style={{ ...collageBackgroundStyle, zIndex: 9999 }}
             ></div>
           ) : null}
         </main>
