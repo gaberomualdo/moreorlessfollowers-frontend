@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "autoprefixer": "^9",
+    "comma-number": "^2.0.2",
     "dayjs": "^1.10.4",
     "postcss": "^7",
     "react": "^17.0.2",
