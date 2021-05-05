@@ -1,2 +1,2 @@
-const serverBase = 'http://localhost:6001';
+const serverBase = 'https://api.moreorlessfollowers.com';
 export default serverBase;
