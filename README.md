@@ -1,8 +1,8 @@
-# [More Or Less Followers](https://moreorlessfollowers.com/)
+# More Or Less Followers
 
 Check it out at [moreorlessfollowers.com](https://moreorlessfollowers.com/).
 
-![Demo Image](demo.png)
+[![Demo Image](demo.png)](https://moreorlessfollowers.com/)
 
 More Or Less Followers is a game to guess which accounts have more or less Instagram followers. Data is updated periodically from a wide array of top Instagram accounts, and games are randomly selected from those accounts.
 
