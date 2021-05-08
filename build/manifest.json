@@ -1,5 +1,10 @@
 {
+  "short_name": "+/- Followers",
   "name": "+/- Followers",
+  "theme_color": "#ffffff",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
   "icons": [
     {
       "src": "/android-icon-36x36.png",

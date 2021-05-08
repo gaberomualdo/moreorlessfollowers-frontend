@@ -33,13 +33,18 @@
   .pulse-right {
     animation: pulse-right 0.75s linear 0s infinite alternate;
   }
-  .h-screen-1\/2 {
-    height: 50vh;
+  .my-h-screen-1\/2 {
+    height: calc(var(--screen-height) / 2);
   }
-
-  @media screen and (max-width: 767px) {
-    .-md-zoom-small {
-      zoom: 80%;
+  .my-min-h-screen {
+    min-height: var(--screen-height);
+  }
+  .my-h-screen {
+    height: var(--screen-height);
+  }
+  @media screen and (min-width: 768px) {
+    .md\:my-h-screen {
+      height: var(--screen-height);
     }
   }
 }

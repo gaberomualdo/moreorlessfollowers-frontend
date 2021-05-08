@@ -4,3 +4,4 @@ export { default as Button } from './Button/';
 export { default as DataLastUpdated } from './DataLastUpdated/';
 export { default as Modal } from './Modal/';
 export { default as AnimatedNumber } from './AnimatedNumber/';
+export { default as ScreenHeightStyleContainer } from './ScreenHeightStyleContainer/';
